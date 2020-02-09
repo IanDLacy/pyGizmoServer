@@ -1,9 +1,9 @@
 ws:
   ip: '0.0.0.0'
-  port: 11111
+  port: 22222
 tcp: 
   ip: '0.0.0.0'
-  port: 36364
+  port: 8080
 controller: 
   name: 'TestCubeUSB'
   schema: 'testcube_hw.json'

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="header"><h1>{{title}}</h1><h3>  Version: {{version}}</h3></div>
+        <div class="main" id="indexMain">  
+            <h3>  Server started: {{time_started}}</h3>          
+            <div id="ui">
+                <div id="buttonbar"></div>
+                <script>
+                    fetch("/model")
+                        .then(async (response) => {
+                            model = await response.json();
+                            console.log(model);
+                            var buttonbar = document.getElementById("buttonbar");
+                            Object.keys(model.data).forEach((root, index, array) => {
+                                var btn = document.createElement("button");
+                                btn.className = "btn";
+                                btn.id = root;
+                                btn.innerText = root;
+                                btn.addEventListener("click", () => {
+                                    showtree(root, array);
+                                });
+                                buttonbar.appendChild(btn);
+                            });
+                        }
+                    );
+                </script>
+            </div>
+            <div id="treecontainer"></div>
+        </div>
+    <div class="footer"><h4>PTM Electronics 2020</h4></div>
+{% endblock %}

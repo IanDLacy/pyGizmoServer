@@ -53,6 +53,9 @@ async def get_index(request):
         "title": cfg.controller.name,
         "version": version,
         "time_started": time.strftime("%Y-%m-%d %H:%M"),
+        "Request_Host": request.host,
+        "Request_Path": request.path,
+        "Request_QueryString": request.query_string,
     }
 
 
