@@ -2,7 +2,7 @@ import jsonpatch, json, itertools
 from itertools import zip_longest
 import copy, logging
 import dpath.util
-import io, copy, re, time
+import io, copy, re, time, asyncio
 from pyGizmoServer.subscription_server import SubscriptionServer
 from pyGizmoServer.utility import Utility
 from aiohttp import web
@@ -21,8 +21,9 @@ def merge(a, b):
 
 
 class QueryHandler:
-    def __init__(self, ws_ip, ws_port, schema, model=None):
-        self.schema = schema
+    def __init__(self, ws_ip, ws_port, controller, model=None):
+        self.controller = controller
+        self.schema = controller.schema
         self.model = model
         self.err = None
         self.logger = logging.getLogger("gizmoLogger")
@@ -30,10 +31,7 @@ class QueryHandler:
         self.subscription_server = SubscriptionServer(ws_ip, ws_port)
         self.subscribers = {}
 
-    def add_controller(self, controller):
-        self.controller = controller
-
-    def handle_get(self, request):
+    async def handle_get(self, request):
         path = request.path
         if path == "/model":
             path = "/"
@@ -46,9 +44,10 @@ class QueryHandler:
             self.logger.error(f"{response}")
             return
         if data.get("routine") is not None:
-            data["model_data"] = getattr(self.controller, data["routine"])(
+            getattr(self.controller, data["routine"])(
                 *data["args"]
             )
+            self.controller.finished()
         return web.json_response(
             {"path": data["path_string"], "data": data["model_data"]}
         )

@@ -1,5 +1,3 @@
-# export TEST_ENV='development'
-
 from pyGizmoServer.modification_handler import ModificationHandler
 from pyGizmoServer.query_handler import QueryHandler
 from pyGizmoServer.utility import Utility
@@ -10,8 +8,10 @@ from aiojobs.aiohttp import setup, spawn, atomic
 import time, jinja2, aiohttp_jinja2, logging, aiojobs, pkg_resources
 from app_settings import AppSettings
 
-cfg = AppSettings()
-
+import os
+os.environ['TEST_ENV'] = 'production'
+cfg = AppSettings(env_name='TEST_ENV')
+starttime = time.strftime("%Y-%m-%d %H:%M")
 
 """ get version from setup.py """
 version = pkg_resources.require("pyGizmoServer")[0].version
@@ -28,21 +28,18 @@ handler.setFormatter(
 )
 logger.addHandler(handler)
 
-""" get schema """
-with open(f"schemas/{cfg.controller.schema}") as f:
-    hwschema = json.load(f)
-
-""" set initial model """
-model = Utility.initialize_model_from_schema(f"schemas/{cfg.model.schema}")
-
-""" setup modification, query handlers """
-modification_handler = ModificationHandler(hwschema, model=model)
-query_handler = QueryHandler(cfg.ws.ip, cfg.ws.port, hwschema, model=model)
-
 """ setup controller """
 controller = getattr(
-    importlib.import_module(f"controllers.{cfg.controller.name}"), cfg.controller.name
-)(query_handler.handle_updates)
+    importlib.import_module(f"{cfg.controller}.{cfg.controller}"), cfg.controller
+)()
+
+""" set initial model """
+model = Utility.initialize_model_from_schema(controller.schema)
+
+""" setup modification, query handlers """
+modification_handler = ModificationHandler(controller, model=model)
+query_handler = QueryHandler(cfg.ws.ip, cfg.ws.port, controller, model=model)
+controller.setcallback(query_handler.handle_updates)
 
 coro_running = False
 
@@ -50,9 +47,10 @@ coro_running = False
 @aiohttp_jinja2.template("index.html")
 async def get_index(request):
     return {
-        "title": cfg.controller.name,
+        "title": cfg.controller,
         "version": version,
-        "time_started": time.strftime("%Y-%m-%d %H:%M"),
+        "time_started": starttime,
+        "Request_Time": time.strftime("%Y-%m-%d %H:%M"),
         "Request_Host": request.host,
         "Request_Path": request.path,
         "Request_QueryString": request.query_string,
@@ -74,8 +72,6 @@ def get_model(request):
 
 def make_app():
     controller.start()
-    modification_handler.add_controller(controller)
-    query_handler.add_controller(controller)
 
     app = web.Application(loop=asyncio.get_event_loop())
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(["templates", "static"]))

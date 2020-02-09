@@ -1,0 +1,61 @@
+{
+    "relayController": {
+        "relays" : {
+            "$count": 6,
+            "enabled": { "w": "setRelay", "args": [], "$type": "boolean" }
+        }
+    },
+    "pwmController" : {
+        "bankA" : {
+            "frequency" : { "w" : "setPwmFrequencyA",  "args": [], "$type": "integer" }
+        },
+        "bankB" : {
+            "frequency" : { "w" : "setPwmFrequencyB",  "args": [], "$type": "integer" }
+        },
+        "pwmCurrentMonitorUpdateRate" : { "w" : "setPwmCurrentMonitorUpdateRate", "args": [], "$type": "integer" },
+        "pwms" : {
+            "$count": 12,
+            "activeConfiguration" : {},
+            "dutyCycle" : { "w" : "setPwmDutyCycle", "args": [], "$type": "integer" },
+            "enabled" : { "w" : "setPwmEnabled", "args": [], "$type": "boolean" },
+            "profile" : {},
+            "currentMonitor" : {
+                "faultThreshold" : { "w" : "setPwmFaultThreshold", "args": [], "$type": "integer" },
+                "faultDelay" : { "w" : "setPwmFaultDelay", "args": [], "$type": "integer" },
+                "faulty" : { "args": [], "$type": "boolean" },
+                "measuredCurrent" : { "args": [], "$type": "integer" },
+                "enabled" : { "w" : "setPwmCurrentMonitorEnabled", "args": [], "$type": "boolean" }
+            }
+        }
+    },
+    "adcInputController" : {
+        "adcInputMonitorRate" : { "w" : "setAdcMonitorUpdateRate", "args": [], "$type": "integer" },
+        "adcInputs" : {
+            "$count": 8,
+            "measuredVoltage" : {  "args": [], "$type": "integer" },
+            "enabled" : { "w" : "setAdcEnabled",  "args": [], "$type": "boolean" }
+        }
+    },
+    "digitalInputController" : {
+        "digitalInputMonitorRate" : { "w" : "setDiMonitorUpdateRate", "args": [], "$type": "integer" },
+        "digitalInputs" :{
+            "$count": 12,
+            "high" : {  "args": [], "$type": "boolean" }
+        }
+    },
+    "frequencyInputController" : {
+        "frequencyMonitorRate" : { "$type" : "integer" },
+        "frequencyInputs" :{
+            "$count": 4,
+            "measuredFrequency" : {  "args": [], "$type": "integer" },
+            "enabled" : { "w" : "setFrequencyInputEnabled", "args": [], "$type": "boolean" }
+        }
+    },
+    "canDatabase" : { "w" : "setCanDatabase", "args": [], "$type": "object"  },
+    "usb":{
+        "message": {"w": "sendrawusb", "args": [], "$type": "string"}
+    },
+    "version": { "r" : "getFirmwareVersion", "args": [], "$type": "string" },
+    "wsinvoke": {"w": "wsinvoke", "args": [], "$type": "string" },
+    "thermometer": {"w": "readLabJackAdd", "args": [1234], "$type": "string" }
+}

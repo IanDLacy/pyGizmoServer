@@ -6,14 +6,12 @@ from aiohttp import web
 
 
 class ModificationHandler:
-    def __init__(self, schema, model=None):
+    def __init__(self, controller, model=None):
+        self.controller = controller
+        self.schema = controller.schema
         self.logger = logging.getLogger("gizmoLogger")
         self.logger.debug("init")
-        self.schema = schema
         self.model = model
-
-    def add_controller(self, controller):
-        self.controller = controller
 
     async def handle_patch_from_client(self, request):
         request = json.loads(await request.text())

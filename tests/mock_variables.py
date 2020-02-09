@@ -131,6 +131,4 @@ class MockVars:
                 ],
             },
         }
-        # print('insideMockModel' + str(self.mock_model))
-        with open("tests/mock_HW.json", "r") as f:
-            self.mock_schema = json.load(f)
+

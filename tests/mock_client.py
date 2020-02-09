@@ -2,11 +2,6 @@ import asyncio, json
 import websockets
 import aiohttp
 
-
-def init():
-    tcws = http.client.HTTPConnection("127.0.0.1", port=36364)
-
-
 async def connect(path):
     uri = f"ws://localhost:11111{path}"
     async with websockets.connect(uri) as websocket:

@@ -2,11 +2,20 @@ import asyncio, json
 
 
 class MockUSB:
-    def __init__(self, callback):
-        self.callback = callback
+    def __init__(self):
+        self.callback = None
         self.msg = None
+        with open("TestCube/schema.json") as f:
+            self.schema = json.load(f)
+
+    def setcallback(self, callback):
+        if not callable(callback):
+            raise ValueError("callback must be a function")
+        self.callback = callback
 
     def start(self):
+        if self.callback is None:
+            raise RuntimeError('controller callback not set')
         pass
 
     def setRelay(self, relay, state):

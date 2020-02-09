@@ -3,8 +3,10 @@ class VersionMessage:
         self.ask = None
         pass
 
-    def getFirmwareVersion(self):
-        self.ask = True
+    async def getFirmwareVersion(self):
+        data = await self.wait_for_version()
+        path = '/version'
+        return [{'path': path, 'data': data}]
 
     def get_version_messages(self):
         if self.ask == None:
