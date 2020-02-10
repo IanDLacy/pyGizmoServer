@@ -5,10 +5,10 @@ setup(
     version="1.0.2",
     python_requires=">=3.7",
     packages=[
-        "TestCubeUSB",
+        "TestCube",
         "MockUSB",
         "pyGizmoServer",
-        "controllers.TestCubeComponents",
+        "TestCube.TestCubeComponents",
         "tests",
         "static",
     ],
