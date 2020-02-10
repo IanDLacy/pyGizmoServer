@@ -1,4 +1,4 @@
-from controllers.TestCubeUSB import *
+from TestCubeUSB.TestCubeUSB import *
 from pyGizmoServer.utility import Utility
 from tests.mock_variables import MockVars
 
@@ -19,8 +19,9 @@ class Test_usbRec():
 
     def processandcheck(self,msg):
         d = self.controller.recUsb(msg)
+        
         for pd in d:
-            results = Utility.parse_path_against_schema_and_model(path=pd['path'],schema=self.mockvars.mock_schema,model=self.mockvars.mock_model)
+            results = Utility.parse_path_against_schema_and_model(path=pd['path'],schema=self.schema,model=self.mockvars.mock_model)
             self.checkmatch(results['model_data'],pd['data'],pd['path'])
 
     def callback():
@@ -28,7 +29,9 @@ class Test_usbRec():
 
     def setup(self):
         self.mockvars = MockVars()
-        self.controller=TestCubeUSB(self.callback)
+        self.controller=TestCubeUSB()
+        with open("TestCubeUSB/schema.json") as f:
+            self.schema = json.load(f)
 
     def test_usbmsg5(self): #pwm act and freq
         id,acthi,freqa,freqb = 0x5,0x555,0x1000,0xfff

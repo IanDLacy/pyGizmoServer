@@ -48,6 +48,7 @@ class QueryHandler:
                 *data["args"]
             )
             self.controller.finished()
+            """TODO: this doesnt do anything right now"""
         return web.json_response(
             {"path": data["path_string"], "data": data["model_data"]}
         )

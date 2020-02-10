@@ -1,9 +1,13 @@
+
+import logging
 class AdcMessage:
     def __init__(self):
         self.AdcChannels = 0x3F
+        self.logger = logging.getLogger('gizmoLogger')
         self.AdcRate = None
 
     def setAdcMonitorUpdateRate(self, rate: int):
+        self.logger.debug(f"{rate}")
         self.AdcRate = int(rate / 50)
 
     def setAdcEnabled(self, enabled: bool, channel: int):

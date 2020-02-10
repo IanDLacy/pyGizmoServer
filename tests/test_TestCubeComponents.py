@@ -1,11 +1,11 @@
-from controllers.TestCubeComponents.actuators import *
-from controllers.TestCubeComponents.adc import *
-from controllers.TestCubeComponents.di import *
-from controllers.TestCubeComponents.frequency import *
-from controllers.TestCubeComponents.pwm import *
-from controllers.TestCubeComponents.relay import *
-from controllers.TestCubeComponents.usb import *
-from controllers.TestCubeComponents.version import *
+from TestCubeUSB.TestCubeComponents.actuators import *
+from TestCubeUSB.TestCubeComponents.adc import *
+from TestCubeUSB.TestCubeComponents.di import *
+from TestCubeUSB.TestCubeComponents.frequency import *
+from TestCubeUSB.TestCubeComponents.pwm import *
+from TestCubeUSB.TestCubeComponents.relay import *
+from TestCubeUSB.TestCubeComponents.usb import *
+from TestCubeUSB.TestCubeComponents.version import *
 
 
 def test_init():
@@ -102,5 +102,6 @@ def test_adcrequest():
 
 def test_version():
     vm = VersionMessage()
-    vm.getFirmwareVersion()
+    vm.ask = True
+    vm.get_version_messages()
     assert vm.get_version_messages() == ["00000040"]

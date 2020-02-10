@@ -7,7 +7,9 @@ import json
 class TestUtility:
     def get_instance(self):
         self.mockvars = MockVars()
-        self.schema = self.mockvars.mock_schema
+        with open("TestCubeUSB/schema.json") as f:
+            self.schema = json.load(f)
+        #self.schema = self.mockvars.mock_schema
         self.model = self.mockvars.mock_model
 
     def test_parse_path_against_schema_and_model_read_root_directory(self):
@@ -32,7 +34,7 @@ class TestUtility:
         assert result["path_up_to_array_index"] == "/relayController/relays"
         assert result["path_string"] == "/relayController/relays/2/enabled"
         assert result["model_data"] == False
-        assert result["routine"] == "getRelay"
+        #assert result["routine"] == "getRelay"
         assert result["args"] == [2]
         assert result["error"] == None
 
@@ -45,7 +47,7 @@ class TestUtility:
         assert result["path_up_to_array_index"] == "/relayController/relays"
         assert result["path_string"] == "/relayController/relays/2/enabled"
         assert result["model_data"] == False
-        assert result["routine"] == "getRelay"
+        #assert result["routine"] == "getRelay"
         assert result["args"] == [2]
         assert result["error"] == None
 

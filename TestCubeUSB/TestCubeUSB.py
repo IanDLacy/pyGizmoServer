@@ -30,9 +30,10 @@ class TestCubeUSB(
         ActCurMessage.__init__(self)
         UsbMessage.__init__(self)
         FrequencyMessage.__init__(self)
+        AdcMessage.__init__(self)
         
     
-    def __init__(self,):
+    def __init__(self):
         self.logger = logging.getLogger('gizmoLogger')
         self.logger.debug("TescubeUSB()")
         self.callParentInits()
@@ -105,11 +106,13 @@ class TestCubeUSB(
                     self.logger.error(f"ERROR: {e}")
                 continue
             msg = ''.join([chr(x) for x in msg])
+            self.logger.debug(f"{msg}")
             d = self.recUsb(msg)
             if len(d) > 0:
                 await self.callback(d)
             
     def recUsb(self,msg):
+        
         _id, payload = msg[:8], msg[8:]
         try:
             f = self.usbidparsers.get(_id)
@@ -344,7 +347,7 @@ class TestCubeUSB(
         return [{'path': path, 'data': data}]  
                       
     def recusb_41_version(self,payload):
-        print("GOTIT")
+        #print("GOTIT")
         hi,lo,patch = (
             int(payload[:4],16),
             int(payload[4:8],16),
@@ -358,16 +361,8 @@ class TestCubeUSB(
 
     async def getFirmwareVersion(self):
         self.ask = True
-        data = await self.wait_for_version()
-        path = '/version'
-        return [{'path': path, 'data': data}]
 
     def get_version_messages(self):
         if self.ask == None:
             return []
         return [f"{0x40:08x}"]
-
-    async def wait_for_version(self):
-        while self.version is None:
-            await asyncio.sleep(1)
-        return self.version
