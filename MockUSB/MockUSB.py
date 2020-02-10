@@ -5,7 +5,7 @@ class MockUSB:
     def __init__(self):
         self.callback = None
         self.msg = None
-        with open("TestCube/schema.json") as f:
+        with open("TestCubeUSB/schema.json") as f:
             self.schema = json.load(f)
 
     def setcallback(self, callback):
