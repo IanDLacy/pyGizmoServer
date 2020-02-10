@@ -9,7 +9,7 @@ import time, jinja2, aiohttp_jinja2, logging, aiojobs, pkg_resources
 from app_settings import AppSettings
 
 import os
-os.environ['TEST_ENV'] = 'production'
+os.environ['TEST_ENV'] = 'devel'
 cfg = AppSettings(env_name='TEST_ENV')
 starttime = time.strftime("%Y-%m-%d %H:%M")
 
