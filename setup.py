@@ -2,15 +2,17 @@ from setuptools import setup
 
 setup(
     name="pyGizmoServer",
-    version="1.0.2",
-    python_requires=">=3.7",
+    version="1.0.3",
+    python_requires=">=3.6",
     packages=[
         "TestCubeUSB",
         "MockUSB",
         "pyGizmoServer",
-        "TestCubeUSB.TestCubeComponents",
         "tests",
         "static",
+        "templates",
+        "config",
+        "MockUSB",
     ],
     install_requires=[
         "jsonpatch",
@@ -22,8 +24,14 @@ setup(
         "aiohttp-jinja2",
         "pyusb",
         "pytest",
-        "app-settings",
+        "PyYAML",
     ],
     package_data={"schemas": ["*.txt", "*.json"], "": ["*.md"]},
-    entry_points={"console_scripts": ["gizmo=pyGizmoServer.run:main"]},
+    entry_points={
+        "console_scripts": [
+            "gizmo=pyGizmoServer.run:main",
+            "gizmocli=tests.mock_client:main",
+            "justusb=TestCubeUSB.justusb:main",
+        ]
+    },
 )

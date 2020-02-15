@@ -1,4 +1,3 @@
-from pyGizmoServer.query_handler import QueryHandler
 from pyGizmoServer.utility import Utility
 from tests.mock_variables import MockVars
 import json
@@ -9,7 +8,7 @@ class TestUtility:
         self.mockvars = MockVars()
         with open("TestCubeUSB/schema.json") as f:
             self.schema = json.load(f)
-        #self.schema = self.mockvars.mock_schema
+        # self.schema = self.mockvars.mock_schema
         self.model = self.mockvars.mock_model
 
     def test_parse_path_against_schema_and_model_read_root_directory(self):
@@ -22,8 +21,8 @@ class TestUtility:
         assert result["path_string"] == "/"
         assert result["model_data"] == self.model
         assert result["routine"] is None
-        assert result["args"] == None
-        assert result["error"] == None
+        assert result["args"] is None
+        assert result["error"] is None
 
     def test_parse_path_against_schema_and_model_read(self):
         self.get_instance()
@@ -33,10 +32,10 @@ class TestUtility:
         )
         assert result["path_up_to_array_index"] == "/relayController/relays"
         assert result["path_string"] == "/relayController/relays/2/enabled"
-        assert result["model_data"] == False
-        #assert result["routine"] == "getRelay"
+        assert not result["model_data"]
+        # assert result["routine"] == "getRelay"
         assert result["args"] == [2]
-        assert result["error"] == None
+        assert result["error"] is None
 
     def test_parse_path_against_schema_and_model_indexed_read(self):
         self.get_instance()
@@ -46,10 +45,10 @@ class TestUtility:
         )
         assert result["path_up_to_array_index"] == "/relayController/relays"
         assert result["path_string"] == "/relayController/relays/2/enabled"
-        assert result["model_data"] == False
-        #assert result["routine"] == "getRelay"
+        assert not result["model_data"]
+        # assert result["routine"] == "getRelay"
         assert result["args"] == [2]
-        assert result["error"] == None
+        assert result["error"] is None
 
     def test_parse_path_against_schema_and_model_indexed_write(self):
         self.get_instance()
@@ -59,10 +58,10 @@ class TestUtility:
         )
         assert result["path_up_to_array_index"] == "/relayController/relays"
         assert result["path_string"] == "/relayController/relays/3/enabled"
-        assert result["model_data"] == False
+        assert not result["model_data"]
         assert result["routine"] == "setRelay"
         assert result["args"] == [3]
-        assert result["error"] == None
+        assert result["error"] is None
 
     def test_parse_path_against_schema_and_model_bad_path(self):
         self.get_instance()

@@ -1,4 +1,0 @@
-controller: 'TestCubeUSB'
-logging:
-  loglevel: 'DEBUG'
-  filename: 'gizmo.log'

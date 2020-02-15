@@ -39,8 +39,8 @@ def test_pwmfreq():
 
 def test_pwmhiconf():
     pm = PwmMessage()
-    pm.sethiconf(0, True)
-    pm.sethiconf(8, False)
+    pm.sethiconf(0, "HIGH")
+    pm.sethiconf(8, "LOW")
     assert pm.get_pwm_messages() == ["000000040101000100000000"]
 
 
@@ -48,11 +48,11 @@ def test_pwmduty():
     pm = PwmMessage()
     pm.setPwmDutyCycle(0, 50)
     pm.setPwmDutyCycle(4, 50)
-    assert pm.get_pwm_messages() == ["000000060011320000003200"]
+    assert pm.get_pwm_messages() == ["000000060011003200000032"]
     pm.setPwmDutyCycle(6, 50)
     assert pm.get_pwm_messages() == [
-        "000000060011320000003200",
-        "000000060101320000000000",
+        "000000060011003200000032",
+        "000000060101000000000032",
     ]
 
 
@@ -67,15 +67,15 @@ def test_pwmenable():
 def test_dirate():
     dm = DiMessage()
     assert dm.get_di_messages() == []
-    dm.setDiMonitorUpdateRate(1)
+    dm.setDiMonitorUpdateRate(1 * 50)
     assert dm.get_di_messages() == ["0000000a01"]
 
 
 def test_actCur():
     am = ActCurMessage()
-    am.setPwmCurrentMonitorUpdateRate(1)
+    am.setPwmCurrentMonitorUpdateRate(1 * 50)
     am.setPwmCurrentMonitorChannels(0x555)
-    am.setPwmFaultThreshold(0x22)
+    am.setPwmFaultThreshold(0x22 * 50)
     assert am.get_actcur_messages() == ["0000000c05550122"]
 
 
@@ -83,12 +83,17 @@ def test_sendUsbMsg():
     um = UsbMessage()
     um.sendrawusb("1234")
     assert um.get_sendusb_messages() == ["1234"]
+    um.sendrawusb(["1","2",'3'])
+    assert um.get_sendusb_messages() == ["1","2",'3']
 
 
 def test_freq():
     fm = FrequencyMessage()
-    fm.setFrequencyInputEnabled(0x5)
-    fm.setFrequencyMonitorRate(0x1)
+    fm.setFrequencyInputEnabled(0, 1)
+    fm.setFrequencyInputEnabled(2, 1)
+    fm.setFrequencyInputEnabled(1, 0)
+    fm.setFrequencyInputEnabled(3, 0)
+    fm.setFrequencyMonitorRate(0x1 * 50)
     assert fm.get_freq_messages() == ["0000000e0501"]
 
 
@@ -104,4 +109,4 @@ def test_version():
     vm = VersionMessage()
     vm.ask = True
     vm.get_version_messages()
-    assert vm.get_version_messages() == ["00000040"]
+    assert vm.get_version_messages() == ["00000050"]

@@ -1,16 +1,13 @@
-import copy, json
+import copy
+import yaml
+import os
 
 
 class Utility:
     @classmethod
     def parse_path_against_schema_and_model(
-        cls,
-        model: dict,
-        schema: dict,
-        path: str,
-        read_write: str = "r",
-        toLeaves: bool = False,
-    ) -> dict:
+        cls, model: dict, schema: dict, path: str, read_write: str = "r",
+    ):
         """
         navigate the schema following the request's path. The destination
         should be the name of a function and associated parameters that this 
@@ -37,7 +34,7 @@ class Utility:
         while "" in paths:
             paths.remove("")
         for i, p in enumerate(paths):
-            """ 
+            """
             check if the request utilizes array indexing 
             and if so, store the index to pass to the controller
             """
@@ -49,9 +46,9 @@ class Utility:
                 else:
                     schema_location = schema_location[p]
                 model_location = model_location[p]
-            except Exception as e:
+            except Exception:
                 epath = "/" + "/".join(paths[:i])
-                if not "FAVICON" in epath:
+                if "FAVICON" not in epath:
                     err = f"PATH ERROR: {epath}/{p}"
                     break
                 else:
@@ -92,3 +89,23 @@ class Utility:
         if "$type" in d:
             return None
         return {k: cls.initialize_model_from_schema(v) for k, v in d.items()}
+
+
+class DotDict(dict):
+    def __getattr__(self, item):
+        val = self[item]
+        if isinstance(val, dict):
+            return DotDict(val)
+        else:
+            return val
+
+
+class Settings:
+    @classmethod
+    def load(cls, filename):
+        try:
+            with open(f"./config/{filename}.yml") as f:
+                return DotDict(yaml.load(f, Loader=yaml.CLoader))
+        except Exception as e:
+            print(f"{e}")
+            return None

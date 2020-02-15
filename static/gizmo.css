@@ -1,98 +1,274 @@
-*{
-    font-family: Helvetica, Arial,sans-serif;
-    margin: 0;
-    padding: 0;
+/*
+	I've converted "gizmo.css" to be a loader of sorts for now, and have toggled off Chris's CSS.
+	Stuff I do is going to go here for now so you can easily see what I've done.
+	If I need to make changes to any other files, I will make it known.
+*/
+
+
+/* Wildcard */
+
+*
+{
+	/* We don't need to live this kind of life. */
+
+	/*
+	font-family: Helvetica, Arial,sans-serif;
+	margin: 0;
+	padding: 0;
+	*/
 }
-div {
-    max-width: 100%;
+
+/* Because I'm Dope Sometimes */
+::selection
+{
+	background-color:#000;
+	color:#FF7F00;
 }
+
+
+/* Tags */
+
+html , body
+{
+	position:relative;	/* This is just for "#indexMain>h3" . */
+	margin:0;
+	background-color: rgb(51, 51, 51); 	/* I've applied the dominant color up here, so the younger elements inherit ( less declaration needed ) . */
+	padding:0;
+	font-family:serif;	/* This let's us know what we haven't painted. */
+	color: rgb(235, 230, 224);	/* I've applied the dominant color up here, so the younger elements inherit ( less declaration needed ) . */
+}
+
+/* I'm debating the necessity of this. Overflow? */
+div
+{
+	max-width:100%;
+}
+
+a ,
+a:visited
+{
+	color:#404040;
+	text-decoration:none;
+	font-weight:normal;
+}
+a:hover ,
+a:focus ,
+a:active
+{
+	color:#adadad;
+}
+
+
+/* Identifiers */
+
+/* What up wit dis? */
+#indexMain>h3
+{
+	position:absolute;
+	top:0;
+	left:0;
+	margin:16px;
+	border:dashed 2px #333333;	/* Equivalent To "rgb(51, 51, 51)" . */
+	padding:8px;
+	color:#404040;
+	letter-spacing:0px;
+	font-family:Helvetica,Arial,sans-serif;
+	font-size:14px;
+}
+
+#ui
+{
+	display:inline-block;
+	margin:0 auto;
+	text-align:left;
+}
+
+/* This needs a better name. */
+#buttonbar
+{
+	height: max-content;	/* I need to look up "max-content" before I go messing with this. */
+}
+
+/* Putting this here because it's an unused hook. */
+#treecontainer>.treenode
+{
+	margin-top:0;
+	font-size:20px;
+}
+
+
+/* Classes That Should Probably Be Identifiers */
+/* Also, I'd like to isolate the 'grid' behavior into separate blocks so everything is concise. */
+
+/* This should maybe be renamed "grid" . */
 .container {
-    display: grid;
-    grid-template-columns: 3em 1fr 3em;
-    grid-template-rows: 6em 1fr 3em;
-    grid-template-areas: 
-        "header header header"
-        "leftpad main rightpad"
-        "footer footer footer";
-    min-height: 100vh;
-    background-color: rgb(51, 51, 51);
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto 1fr auto;
+	grid-template-areas: 
+		"header"
+		"main"
+		"footer";
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:100%;
 }
-.header {
-    grid-area: header;
-    background-color: rgb(31, 31, 31);
-    color: rgb(235, 230, 224);
-    padding: 1em;
-}
-.main {
-    grid-area: main;
-    background-color: rgb(51, 51, 51);
-    color: rgb(235, 230, 224);
-    padding: 1em;
-    
-}
-.footer {
-    grid-area: footer;
-    background-color: rgb(31, 31, 31);
-    color: rgb(235, 230, 224);
-    padding: 1em;
-}
-.treenode {
-    font-weight: bold;
-    color: rgb(241, 237, 231);
-    display: grid;
-    background-color: rgb(43, 43, 43);
-    box-shadow: -3px 3px 8px 1px #181818;
-    padding: 0.5em;
-    margin: 0.5em;
 
+/* Some of this can be merged with ".footer" */
+.header 
+{
+	grid-area: header;
+	margin:0;
+ 	background-color: rgb(31, 31, 31);
+	padding: 1em;
+	text-align:center;
+	font-family:Helvetica,Arial,sans-serif;
 }
-.treeinput {
-    display: inline-block;
-    color: rgb(0, 0, 0);
-    font-size: 1em;
-    border: 1px solid;
-    border-color: rgb(0, 0, 0);
-    font-family: 'Courier New', Courier, monospace;
-    background-color: rgb(255, 255, 255);
-    padding: 0.2em;
-    margin: 0.2em;
-    width: max-content;
-    height: max-content;
-    min-height: 1.2em;
+
+.header h1
+{
+	display:inline-block;
+	vertical-align:middle;
+	margin:0 16px;
+	letter-spacing:-2px;
+	color:#adadad;
 }
-.submit {
-    display: inline-block;
-    background-color: #202020;
-    color: rgb(226, 226, 226);
-    width: max-content;
-    height: max-content;
-    border-width: 0;
-    font-weight: 600;
-    padding: 1em;
-    margin: 0.2em;
+
+.header>h3
+{
+	position:absolute;
+	top:0;
+	right:0;
+	margin:16px;
+	border:dashed 2px #333333;	/* Equivalent To "rgb(51, 51, 51)" . */
+	padding:8px;
+	color:#404040;
+	font-family:Helvetica,Arial,sans-serif;
+	font-size:14px;
 }
-.btn{
-    display: inline-block;
-    color: rgb(235, 230, 224);
-    background-color: rgb(43, 43, 43);
-    border-width: 0;
-    font-weight: 600;
-    padding: 2em;
-    margin: 1em;
-    margin-bottom: 0;
-    width: max-content;
-    height: max-content;
+
+.footer h4
+{
+	display:inline-block;
+	vertical-align:middle;
+	margin:0 16px;
+	color:#404040;
 }
-.btn-selected {
-    color: rgb(30, 30, 30);
-    background-color: rgb(226, 226, 226);
+
+.main
+{
+	grid-area: main;
+	overflow:auto;
+	padding: 1em;
+	text-align:center;
+	letter-spacing:1px;
+	font-family: 'Courier New', Courier, monospace;
 }
-#buttonbar {
-    height: max-content;
+
+/* Some of this can be merged with ".header" */
+.footer
+{
+	grid-area: footer;
+	margin:0;
+	background-color: rgb(31, 31, 31);
+	padding: 1em;
+	text-align:center;
+	font-family:Helvetica,Arial,sans-serif;
 }
 
 
+/* True Classes */
+
+/* Why not just call this ".node" ? */
+.treenode
+{
+	/*display: grid;*/
+	margin: 1em 0.5em;
+	box-shadow: -3px 3px 8px 1px #181818;
+	background-color: rgb(43, 43, 43);
+	padding: 0.5em;
+	color:#adadad;		/* I'm not sure what "rgb(241, 237, 231)" is, but I'm not using it ( too much contrast ) . */
+	font-weight: bold;
+}
+
+.treenode>.treenode
+{
+	font-size:110%;
+}
 
 
+/* I'd go for ".input" here. We can always make another block for ".tree.input" if we need to. */
+#treecontainer input
+{
+	display:inline-block;
+	vertical-align:middle;
+	width: max-content;
+	margin:0 0 0 32px;
+	border:0px solid #000;
+	background-color:#adadad;
+	padding: 8px;
+	color:#000;
+	font-family: 'Courier New', Courier, monospace;
+	font-size:24px;
+	font-weight:bold;
+}
 
+#treecontainer button
+{
+	display: inline-block;
+	vertical-align:middle;
+	width: max-content;
+	margin: 0;
+	border-width: 0;
+	background-color: #202020;
+	padding: 8px;
+	color: #adadad;		/* I don't know what "rgb(226, 226, 226)" is, but I'm not using it. Too much contrast. */
+	text-transform:uppercase;
+	font-family:Helvetica,Arial,sans-serif;
+	font-weight: 600;
+	font-size:24px;
+}
 
+/* I'd like to call this ".button" because I don't see a need to abbreviate this when nothing else is. */
+.btn
+{
+	display: inline-block;
+	width: max-content;
+	height: max-content;
+	margin:16px 16px 0;
+	border:none;
+	background-color: #404040;
+	padding: 2em;
+	color: #adadad;		/* Grey Text */
+	letter-spacing:1px;
+	font-family: 'Courier New', Courier, monospace;
+	font-weight: 600;
+	font-size:16px;
+}
+
+/* This can be changed to ".selected" and stacked with ".button" like ".button.selected" . */
+/* Also this wasn't working because it was ".btn-selected" here and ".btn_selected" in the DOM */
+.btn_selected
+{
+	outline:none;
+	border:solid 0px #2B2B2B;
+	border-width: 8px 4px;
+	background-color:#2B2B2B;	/* Equivalent To "rgb(43, 43, 43)" as normal button was. */
+	color: rgb(235, 230, 224);
+	font-size:18px;
+}
+
+.btn:active ,
+.btn:focus ,
+.btn:hover ,
+.btn_selected:focus ,
+.btn_selected:hover ,
+.btn_selected:active
+{
+	outline:dashed 4px #2B2B2B;		/* Equivalent To "rgb(43, 43, 43)" as normal button was. */
+	color: rgb(235, 230, 224);
+}

@@ -13,3 +13,5 @@ lib64
 *.pyc
 *.log
 *.cfg
+*.mypy_cache
+*.pytest_cache

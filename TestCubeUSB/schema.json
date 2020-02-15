@@ -16,7 +16,7 @@
         "faultThreshold" : { "w" : "setPwmFaultThreshold", "args": [], "$type": "integer" },
         "pwms" : {
             "$count": 12,
-            "activeConfiguration" : {},
+            "activeConfiguration" : {"w": "sethiconf", "args": [], "$type": "string"},
             "dutyCycle" : { "w" : "setPwmDutyCycle", "args": [], "$type": "integer" },
             "enabled" : { "w" : "setPwmEnabled", "args": [], "$type": "boolean" },
             "profile" : {},
@@ -53,7 +53,10 @@
     },
     "canDatabase" : { "w" : "setCanDatabase", "args": [], "$type": "object"  },
     "usb":{
-        "message": {"w": "sendrawusb", "args": [], "$type": "string"}
+        "txMessage": {"w": "sendrawusb", "args": [], "$type": "string"},
+        "rxMessage": {"$type": "string"},
+        "rxCount": {"$type": "integer"},
+        "usbinfo":{"$type": "string"}
     },
     "version": { "r" : "getFirmwareVersion", "args": [], "$type": "string" },
     "wsinvoke": {"w": "wsinvoke", "args": [], "$type": "string" },

@@ -1,23 +1,22 @@
-import jsonpatch, json, itertools
+import logging
 from itertools import zip_longest
-import copy, logging
 import dpath.util
-import io, copy, re, time, asyncio
 from pyGizmoServer.subscription_server import SubscriptionServer
 from pyGizmoServer.utility import Utility
 from aiohttp import web
+from aiojobs.aiohttp import spawn
 
 
 def merge(a, b):
     if isinstance(a, dict) and isinstance(b, dict):
         d = dict(a)
-        d.update({k: merge(a.get(k, None), b[k]) for k in b})
+        d.update({k: merge(a.get(k, "NADA"), b[k]) for k in b})
         return d
 
     if isinstance(a, list) and isinstance(b, list):
-        return [merge(x, y) for x, y in itertools.zip_longest(a, b)]
+        return [merge(x, y) for x, y in zip_longest(a, b)]
 
-    return a if b is None else b
+    return a if b == "NADA" else b
 
 
 class QueryHandler:
@@ -32,39 +31,39 @@ class QueryHandler:
         self.subscribers = {}
 
     async def handle_get(self, request):
+        if not self.controller.running:
+            await spawn(request, self.controller.usbrxhandler())
         path = request.path
         if path == "/model":
             path = "/"
-        self.logger.debug(f"{path}")
+        if self.logger.isEnabledFor(logging.DEBUG):
+            self.logger.debug(f"{path}")
         data = Utility.parse_path_against_schema_and_model(
             self.model, self.schema, path, read_write="r"
         )
         if data["error"] is not None:
             response = data["error"]
             self.logger.error(f"{response}")
-            return
-        if data.get("routine") is not None:
-            getattr(self.controller, data["routine"])(
-                *data["args"]
-            )
-            self.controller.finished()
-            """TODO: this doesnt do anything right now"""
-        return web.json_response(
-            {"path": data["path_string"], "data": data["model_data"]}
-        )
+        elif data.get("routine") is not None:
+            res = await getattr(self.controller, data["routine"])(*data["args"])
+            response = res
+        else:
+            response = {"path": data["path_string"], "data": data["model_data"]}
+        return web.json_response(response)
 
-    async def handle_updates(self, updates):
-        self.logger.debug(f"{updates}")
-        outgoing = []
+    def handle_updates(self, updates):
         if not isinstance(updates, list):
             updates = [updates]
         for update in updates:
+            if self.logger.isEnabledFor(logging.DEBUG):
+                self.logger.debug(f"{update['path']}")
             data = update.get("data")
             path = update.get("path")
             if isinstance(update, str) or data is None or path is None:
                 self.logger.error("path or data key not found")
                 continue
             location = dpath.util.get(self.model, path)
-            dpath.util.set(self.model, merge(location, data), path)
-            outgoing.append({"path": path, "value": data})
-        await self.subscription_server.publish(outgoing)
+            dpath.util.set(self.model, path, merge(location, data))
+            self.subscription_server.publish(
+                {"path": path, "value": dpath.util.get(self.model, path)}
+            )

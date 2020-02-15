@@ -1,5 +1,0 @@
-controller: 'MockUSB'
-logging:
-  loglevel: 'DEBUG'
-  filename: 'gizmodev.log'
-

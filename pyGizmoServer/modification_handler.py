@@ -1,8 +1,9 @@
-import jsonpatch, json
-import copy, logging
-import asyncio
-from pyGizmoServer.utility import *
+import json
+import jsonpatch
+import logging
+from pyGizmoServer.utility import Utility
 from aiohttp import web
+from aiojobs.aiohttp import spawn
 
 
 class ModificationHandler:
@@ -10,12 +11,16 @@ class ModificationHandler:
         self.controller = controller
         self.schema = controller.schema
         self.logger = logging.getLogger("gizmoLogger")
-        self.logger.debug("init")
+        if self.logger.isEnabledFor(logging.DEBUG):
+            self.logger.debug("init")
         self.model = model
 
     async def handle_patch_from_client(self, request):
+        if not self.controller.running:
+            await spawn(request, self.controller.usbrxhandler())
         request = json.loads(await request.text())
-        self.logger.debug(f"{request}")
+        if self.logger.isEnabledFor(logging.DEBUG):
+            self.logger.debug(f"{request['path']}")
         if not isinstance(request, list):
             request = [request]
         response = []
@@ -36,7 +41,8 @@ class ModificationHandler:
             try:
                 getattr(self.controller, data["routine"])(*data["args"])
             except Exception as e:
-                self.logger.debug(f"{e}")
+                if self.logger.isEnabledFor(logging.DEBUG):
+                    self.logger.debug(f"{e}")
                 data["error"] = f"bad request: {r}"
                 return web.json_response(data)
             r["path"] = data["path_string"]
